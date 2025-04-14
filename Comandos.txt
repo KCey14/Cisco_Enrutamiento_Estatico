@@ -1,0 +1,69 @@
+1-Configurar los nombres de los router, reemplazar X con su número
+hostname RX
+
+2-Configurar las Gig0/0 como Gateway en los router
+Router A
+interface gig0/0
+ip address 192.168.1.1 255.255.255.0
+no shutdown
+exit
+
+Router B
+interface gig0/0
+ip address 192.168.2.1 255.255.255.0
+no shutdown
+exit
+
+Router C
+interface gig0/0
+ip address 192.168.3.1 255.255.255.0
+no shutdown
+exit
+
+3-Configurar los seriales en los router
+Router A 
+interface se0/0/0
+ip address 192.168.4.1 255.255.255.252
+no shutdown
+exit
+
+Router B
+interface se0/0/0
+ip address 192.168.4.2 255.255.255.252
+no shutdown
+exit
+
+interface se0/0/1
+ip address 192.168.4.5 255.255.255.252
+no shutdown
+exit
+
+Router C
+interface se0/0/1
+ip address 192.168.4.6 255.255.255.252
+no shutdown
+exit
+
+4-Crear rutas estáticas
+En router A
+Usando el puerto por el que sale la comunicación
+ip route 192.168.2.0 255.255.255.0 se0/0/0
+Usando la IP del siguiente salto, la del otro router
+ip route 192.168.3.0 255.255.255.0 192.168.4.2
+
+En router B
+Ruta hacia red A
+ip route 192.168.1.0 255.255.255.0 serial0/0/0
+Ruta hacia red C
+ip route 192.168.3.0 255.255.255.0 serial0/0/1
+
+En router C
+Ruta hacia red A
+ip route 192.168.1.0 255.255.255.0 192.168.4.5
+Ruta hacia red B
+ip route 192.168.2.0 255.255.255.0 192.168.4.5
+
+5-Guardar configuración de los router
+En modo usuario
+write
+En modo privilegiado do write
